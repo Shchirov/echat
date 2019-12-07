@@ -36,6 +36,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-websocket")
     compile group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.3.0'
     compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.4.0-b180830.0438'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

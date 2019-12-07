@@ -1,19 +1,19 @@
 <template>
     <v-app>
         <v-app-bar app>
-            <v-toolbar-title>echat</v-toolbar-title>
+            <v-toolbar-title :xs6="!$vuetify.breakpoint.xsOnly" >echat</v-toolbar-title>
             <v-btn text
                    v-if="profile"
                    :disabled="$route.path==='/'"
                    @click="showMessages"
             >
-            Messages
+                Messages
             </v-btn>
             <div class="flex-grow-1"></div>
             <v-btn text
                    v-if="profile"
                    :disabled="$route.path ==='/profile'"
-            @click="showProfile"
+                   @click="showProfile"
             >
                 {{profile.name}}
             </v-btn>
@@ -37,12 +37,12 @@
         computed: mapState(['profile']),
         methods:
             {
-               ...mapMutations(['addMessageMutation', 'updateMessageMutation', 'removeMessageMutation']),
-                shоwMessages(){
-                   this.$router.push('/')
+                ...mapMutations(['addMessageMutation', 'updateMessageMutation', 'removeMessageMutation']),
+                showMessages() {
+                    this.$router.push('/')
                 },
-                shоwProfile(){
-                   this.$router.push('/profile')
+                showProfile() {
+                    this.$router.push('/profile')
                 }
             },
         created() {
