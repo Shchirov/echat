@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-app-bar app>
-            <v-toolbar-title :xs6="!$vuetify.breakpoint.xsOnly" >echat</v-toolbar-title>
+            <v-toolbar-title :xs6="!$vuetify.breakpoint.xsOnly">echat</v-toolbar-title>
             <v-btn text
                    v-if="profile"
                    :disabled="$route.path==='/'"
@@ -37,7 +37,10 @@
         computed: mapState(['profile']),
         methods:
             {
-                ...mapMutations(['addMessageMutation', 'updateMessageMutation', 'removeMessageMutation']),
+                ...mapMutations(['addMessageMutation',
+                    'updateMessageMutation',
+                    'removeMessageMutation',
+                    "addCommentMutation"]),
                 showMessages() {
                     this.$router.push('/')
                 },
@@ -57,6 +60,14 @@
                             break
                         case 'REMOVE':
                             this.removeMessageMutation(data.body)
+                            break
+                        default:
+                            console.error(`Looks like the event type if unknown "${data.eventType}"`)
+                    }
+                } else if (data.objectType === 'COMMENT') {
+                    switch (data.eventType) {
+                        case 'CREATE':
+                            this.addCommentMutation(data.body)
                             break
                         default:
                             console.error(`Looks like the event type if unknown "${data.eventType}"`)
