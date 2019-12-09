@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table
@@ -26,6 +27,16 @@ public class Message {
     @JsonView(Views.FullMessage.class)
     private LocalDateTime creationDate;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonView(Views.FullMessage.class)
+    private User author;
+
+    @OneToMany(mappedBy = "message", orphanRemoval = true)
+    @JsonView(Views.FullMessage.class)
+    private List<Comment> comments;
+
+
     @JsonView(Views.FullMessage.class)
     private String link;
     @JsonView(Views.FullMessage.class)
@@ -35,6 +46,35 @@ public class Message {
     @JsonView(Views.FullMessage.class)
     private String linkCover;
 
+    public Message(String text, LocalDateTime creationDate, User author, List<Comment> comments, String link, String linkTitle, String linkDescription, String linkCover) {
+        this.text = text;
+        this.creationDate = creationDate;
+        this.author = author;
+        this.comments = comments;
+        this.link = link;
+        this.linkTitle = linkTitle;
+        this.linkDescription = linkDescription;
+        this.linkCover = linkCover;
+    }
+
+    public Message() {
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public Long getId() {
         return id;

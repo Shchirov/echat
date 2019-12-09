@@ -9,7 +9,7 @@ import 'vuetify/dist/vuetify.min.css'
 import router from "router/router";
 
 
-//this is for check profile and itfield not null
+
 if(frontendData.profile) {
     connect()
 }

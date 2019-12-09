@@ -1,6 +1,7 @@
 package com.esteamer.echat.controller;
 
 import com.esteamer.echat.domain.Message;
+import com.esteamer.echat.domain.User;
 import com.esteamer.echat.domain.Views;
 import com.esteamer.echat.dto.EventType;
 import com.esteamer.echat.dto.MetaDto;
@@ -14,6 +15,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -26,13 +28,11 @@ import java.util.regex.Pattern;
 @RestController
 @RequestMapping("message")
 public class MessageController {
-
     private static String URL_PATTERN = "https?:\\/\\/?[\\w\\d\\._\\-%\\/\\?=&#]+";
     private static String IMAGE_PATTERN = "\\.(jpeg|jpg|gif|png)$";
 
     private static Pattern URL_REGEX = Pattern.compile(URL_PATTERN, Pattern.CASE_INSENSITIVE);
     private static Pattern IMG_REGEX = Pattern.compile(IMAGE_PATTERN, Pattern.CASE_INSENSITIVE);
-
 
     private final MessageRepo messageRepo;
     private final BiConsumer<EventType, Message> wsSender;
@@ -56,9 +56,13 @@ public class MessageController {
     }
 
     @PostMapping
-    public Message create(@RequestBody Message message) throws IOException {
+    public Message create(
+            @RequestBody Message message,
+            @AuthenticationPrincipal User user
+    ) throws IOException {
         message.setCreationDate(LocalDateTime.now());
         fillMeta(message);
+        message.setAuthor(user);
         Message updatedMessage = messageRepo.save(message);
 
         wsSender.accept(EventType.CREATE, updatedMessage);
@@ -85,7 +89,6 @@ public class MessageController {
         messageRepo.delete(message);
         wsSender.accept(EventType.REMOVE, message);
     }
-
 
     private void fillMeta(Message message) throws IOException {
         String text = message.getText();
